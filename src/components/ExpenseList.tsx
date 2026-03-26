@@ -2,7 +2,10 @@ import { useContext } from "react";
 import { ExpenseContext } from "../context/ExpenseContext";
 
 function ExpenseList() {
-  const { expenses } = useContext(ExpenseContext);
+const { expenses, error, deleteExpense } = useContext(ExpenseContext);
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <div>
@@ -13,8 +16,11 @@ function ExpenseList() {
       <ul>
         {expenses.map((expense: any) => (
           <li key={expense.id}>
-            {expense.title} - {expense.amount} kr
-          </li>
+  {expense.title} - {expense.amount} kr
+  <button onClick={() => deleteExpense(expense.id)}>
+    Delete
+  </button>
+</li>
         ))}
       </ul>
     </div>

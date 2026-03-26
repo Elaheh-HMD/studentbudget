@@ -1,29 +1,48 @@
 import { createContext, useState, useEffect } from "react";
-
+import { Expense } from "../types/Expense";
+import { fetchExpenses, createExpenseAPI } from "../services/expenseService";
+import { 
+  fetchExpenses, 
+  createExpenseAPI, 
+  deleteExpenseAPI 
+} from "../services/expenseService";
 export const ExpenseContext = createContext<any>(null);
 
 export const ExpenseProvider = ({ children }: any) => {
-  const [expenses, setExpenses] = useState<any[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // load from localStorage
   useEffect(() => {
-    const data = localStorage.getItem("expenses");
-    if (data) {
-      setExpenses(JSON.parse(data));
-    }
+    loadExpenses();
   }, []);
 
-  // save to localStorage
-  useEffect(() => {
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-  }, [expenses]);
-
-  const addExpense = (expense: any) => {
-    setExpenses((prev) => [...prev, expense]);
+  const loadExpenses = async () => {
+    try {
+      const data = await fetchExpenses();
+      setExpenses(data);
+    } catch (err) {
+      setError("Could not load expenses");
+    }
   };
 
+  const addExpense = async (expense: Expense) => {
+    try {
+      await createExpenseAPI(expense);
+      setExpenses((prev) => [...prev, expense]);
+    } catch (err) {
+      setError("Could not add expense");
+    }
+  };
+const deleteExpense = async (id: number) => {
+  try {
+    await deleteExpenseAPI(id);
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
+  } catch {
+    setError("Could not delete expense");
+  }
+};
   return (
-    <ExpenseContext.Provider value={{ expenses, addExpense }}>
+    <ExpenseContext.Provider value={{ expenses, addExpense, deleteExpense, error }}>
       {children}
     </ExpenseContext.Provider>
   );
