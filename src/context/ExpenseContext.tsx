@@ -11,15 +11,34 @@ export const ExpenseContext = createContext<any>(null);
 export const ExpenseProvider = ({ children }: any) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadExpenses();
-  }, []);
+  const load = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchExpenses();
+      setExpenses(data);
+    } catch {
+      setError("Failed to load expenses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  load();
+}, []);
 
   const loadExpenses = async () => {
     try {
+      setLoading(true);
       const data = await fetchExpenses();
       setExpenses(data);
+    } catch {
+      setError("Failed to load expenses");
+    } finally {
+      setLoading(false);
+    }
     } catch (err) {
       setError("Could not load expenses");
     }
@@ -42,8 +61,9 @@ const deleteExpense = async (id: number) => {
   }
 };
   return (
-    <ExpenseContext.Provider value={{ expenses, addExpense, deleteExpense, error }}>
-      {children}
+
+  <ExpenseContext.Provider value={{ expenses, addExpense, deleteExpense, error, loading }}>    
+{children} 
+
     </ExpenseContext.Provider>
   );
-};
