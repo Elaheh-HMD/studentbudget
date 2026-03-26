@@ -1,4 +1,5 @@
-import React, { Component, ReactNode } from "react";
+import { Component } from "react";
+import type { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
@@ -9,31 +10,15 @@ type State = {
 };
 
 class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false };
-  }
+  state = { hasError: false };
 
   static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error) {
-    console.error("Error caught:", error);
-  }
-
-  handleReload = () => {
-    window.location.reload();
-  };
-
   render() {
     if (this.state.hasError) {
-      return (
-        <div>
-          <h2>Something went wrong 😢</h2>
-          <button onClick={this.handleReload}>Reload</button>
-        </div>
-      );
+      return <h2>Something went wrong.</h2>;
     }
 
     return this.props.children;
