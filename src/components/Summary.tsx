@@ -3,7 +3,8 @@ import { ExpenseContext } from "../context/ExpenseContext";
 import { calculateTotal } from "../utils/expenseUtils";
 
 function Summary() {
-  const { expenses } = useContext(ExpenseContext);
+  const context = useContext(ExpenseContext);
+  const { expenses } = context || { expenses: [] };
 
   const total = calculateTotal(expenses);
 

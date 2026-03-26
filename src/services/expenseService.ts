@@ -1,4 +1,4 @@
-import { Expense } from "../types/Expense";
+import type { Expense } from "../types/Expense";
 
 const BASE_URL = "https://jsonplaceholder.typicode.com/posts";
 
@@ -13,7 +13,7 @@ export const fetchExpenses = async (): Promise<Expense[]> => {
 
     const data = await res.json();
 
-    return data.slice(0, 5).map((item: any) => ({
+    return data.slice(0, 5).map((item: Expense) => ({
       id: item.id,
       title: item.title,
       amount: Math.floor(Math.random() * 100),

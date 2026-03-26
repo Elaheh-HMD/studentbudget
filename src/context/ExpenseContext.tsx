@@ -7,7 +7,7 @@ import {
   deleteExpenseAPI,
 } from "../services/expenseService";
 
-type ExpenseContextType = {
+export type ExpenseContextType = {
   expenses: Expense[];
   addExpense: (expense: Expense) => void;
   deleteExpense: (id: number) => void;
@@ -15,8 +15,8 @@ type ExpenseContextType = {
   loading: boolean;
 };
 
-export const ExpenseContext = createContext({} as ExpenseContextType);
-
+const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
+export { ExpenseContext };
 export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState<string | null>(null);

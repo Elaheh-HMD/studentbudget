@@ -17,7 +17,7 @@ if (expenses.length === 0) {
       {expenses.length === 0 && <p>No expenses yet</p>}
 
       <ul>
-        {expenses.map((expense) => (
+        {expenses.map((expense: typeof expenses[0]) => (
   <ExpenseItem
     key={expense.id}
     expense={expense}

@@ -1,4 +1,4 @@
-import { Expense } from "../types/Expense";
+import type { Expense } from "../types/Expense";
 
 export const createExpense = (title: string, amount: number): Expense => {
   return {

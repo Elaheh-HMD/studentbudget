@@ -7,7 +7,11 @@ function ExpenseForm() {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { addExpense } = useContext(ExpenseContext);
+  const context = useContext(ExpenseContext);
+  if (!context) {
+    throw new Error("ExpenseContext must be used within ExpenseProvider");
+  }
+  const { addExpense } = context;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
