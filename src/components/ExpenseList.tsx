@@ -1,41 +1,41 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ExpenseContext } from "../context/ExpenseContext";
-import ExpenseItem from "./ExpenseItem";
 
-function ExpenseList() {
+const ExpenseList = () => {
+  const [filter, setFilter] = useState("all");
   const context = useContext(ExpenseContext);
 
-  if (!context) {
-    throw new Error("ExpenseContext must be used inside Provider");
-  }
+  if (!context) return null;
 
-  const { expenses, error, deleteExpense, loading } = context;
-
-  if (loading) return <p>Loading...</p>;
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const { expenses, deleteExpense } = context;
 
   if (expenses.length === 0) {
-    return <p>No expenses yet</p>;
+    return <p style={{ textAlign: "center" }}>No expenses yet</p>;
   }
-
-  return (
-    <div>
-      <h2>Expenses</h2>
-
-      <ul>
-        {expenses.map((expense) => (
-          <ExpenseItem
-            key={expense.id}
-            expense={expense}
-            onDelete={deleteExpense}
-          />
+  const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+const filteredExpenses =
+  filter === "all"
+    ? expenses
+    : expenses.filter((e) => e.category === filter);
+return (
+  <div>
+    <select onChange={(e) => setFilter(e.target.value)}>
+      <option value="all">All</option>
+      <option value="food">Food</option>
+      <option value="rent">Rent</option>
+      <option value="transport">Transport</option>
+    </select>
+    <ul>
+      {filteredExpenses.map((e) => (
+        <li key={e.id}>
+{e.title} ({e.category}) - {e.amount} kr
+            <button onClick={() => deleteExpense(e.id)}>Delete</button>
+          </li>
         ))}
       </ul>
+      <p style={{ textAlign: "center" }}>Total: {total} kr</p>
     </div>
   );
-}
+};
 
 export default ExpenseList;

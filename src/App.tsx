@@ -3,7 +3,7 @@ import ExpenseList from "./components/ExpenseList";
 
 function App() {
   return (
-    <div>
+    <div className="container">
       <h1>Student Budget</h1>
       <ExpenseForm />
       <ExpenseList />

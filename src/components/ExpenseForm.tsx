@@ -1,22 +1,29 @@
 import { useState, useContext } from "react";
 import { ExpenseContext } from "../context/ExpenseContext";
-import { createExpense } from "../utils/expenseUtils";
-import InputField from "./InputField";
+import type { Expense } from "../types/Expense";
 
-function ExpenseForm() {
+const ExpenseForm = () => {
+  const context = useContext(ExpenseContext);
+
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
+const [category, setCategory] = useState("food");
+  if (!context) return null;
 
-  const context = useContext(ExpenseContext);
-  if (!context) {
-    throw new Error("ExpenseContext must be used within ExpenseProvider");
-  }
   const { addExpense } = context;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newExpense = createExpense(title, Number(amount));
+    if (!title || !amount) return;
+
+    const newExpense: Expense = {
+  id: Date.now(),
+  title,
+  amount: Number(amount),
+  category,
+};
+
     addExpense(newExpense);
 
     setTitle("");
@@ -24,26 +31,31 @@ function ExpenseForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <InputField
-        label="Title"
-        type="text"
-        value={title}
-        onChange={setTitle}
-        required
-      />
+  <form onSubmit={handleSubmit} className="form">
+    <input
+      type="text"
+      placeholder="Title"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+<select
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+>
+  <option value="food">Food</option>
+  <option value="rent">Rent</option>
+  <option value="transport">Transport</option>
+</select>
+    <input
+      type="number"
+      placeholder="Amount"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+    />
 
-      <InputField
-        label="Amount"
-        type="number"
-        value={amount}
-        onChange={setAmount}
-        required
-      />
-
-      <button type="submit">Add Expense</button>
-    </form>
-  );
-}
+    <button type="submit">Add Expense</button>
+  </form>
+);
+};
 
 export default ExpenseForm;
