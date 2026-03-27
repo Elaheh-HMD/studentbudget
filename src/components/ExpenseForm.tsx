@@ -53,7 +53,7 @@ const [category, setCategory] = useState("food");
       onChange={(e) => setAmount(e.target.value)}
     />
 
-    <button type="submit">Add Expense</button>
+<button type="submit">+ Add Expense</button>
   </form>
 );
 };

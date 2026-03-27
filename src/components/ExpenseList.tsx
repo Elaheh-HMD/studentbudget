@@ -10,8 +10,11 @@ const ExpenseList = () => {
   const { expenses, deleteExpense } = context;
 
   if (expenses.length === 0) {
-    return <p style={{ textAlign: "center" }}>No expenses yet</p>;
-  }
+return (
+  <p style={{ textAlign: "center", marginTop: "20px" }}>
+    No expenses yet 💸
+  </p>
+);  }
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 const filteredExpenses =
   filter === "all"
