@@ -1,14 +1,13 @@
-import Home from "./pages/Home";
-import { ExpenseProvider } from "./context/ExpenseContext";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ExpenseForm from "./components/ExpenseForm";
+import ExpenseList from "./components/ExpenseList";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ExpenseProvider>
-        <Home />
-      </ExpenseProvider>
-    </ErrorBoundary>
+    <div>
+      <h1>Student Budget</h1>
+      <ExpenseForm />
+      <ExpenseList />
+    </div>
   );
 }
 
