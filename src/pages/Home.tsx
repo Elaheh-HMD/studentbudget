@@ -4,8 +4,9 @@ import Summary from "../components/Summary";
 
 function Home() {
   return (
-    <div>
-      <h1>Student Budget</h1>
+    <div style={{ maxWidth: "500px", margin: "auto" }}>
+      <h1>StudentBudget</h1>
+
       <Summary />
       <ExpenseForm />
       <ExpenseList />
