@@ -1,11 +1,6 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import type { ReactNode } from "react";
 import type { Expense } from "../types/Expense";
-import {
-  fetchExpenses,
-  createExpenseAPI,
-  deleteExpenseAPI,
-} from "../services/expenseService";
 
 export type ExpenseContextType = {
   expenses: Expense[];
@@ -17,45 +12,28 @@ export type ExpenseContextType = {
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 export { ExpenseContext };
+
 export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchExpenses();
-        setExpenses(data);
-      } catch {
-        setError("Failed to load expenses");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // ✅ load مستقیم از localStorage (بدون useEffect)
+  const [expenses, setExpenses] = useState<Expense[]>(() => {
+    const data = localStorage.getItem("expenses");
+    return data ? JSON.parse(data) : [];
+  });
 
-    load();
-  }, []);
+  const [error] = useState<string | null>(null);
+  const [loading] = useState(false);
 
-  const addExpense = async (expense: Expense) => {
-    try {
-      const newExpense = await createExpenseAPI(expense);
-      setExpenses((prev: Expense[]) => [...prev, newExpense]);
-    } catch {
-      setError("Could not add expense");
-    }
+  const addExpense = (expense: Expense) => {
+    const updated = [...expenses, expense];
+    setExpenses(updated);
+    localStorage.setItem("expenses", JSON.stringify(updated));
   };
 
-  const deleteExpense = async (id: number) => {
-    try {
-      await deleteExpenseAPI(id);
-      setExpenses((prev: Expense[]) =>
-        prev.filter((e: Expense) => e.id !== id)
-      );
-    } catch {
-      setError("Could not delete expense");
-    }
+  const deleteExpense = (id: number) => {
+    const updated = expenses.filter((e) => e.id !== id);
+    setExpenses(updated);
+    localStorage.setItem("expenses", JSON.stringify(updated));
   };
 
   return (
